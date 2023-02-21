@@ -1,0 +1,24 @@
+---
+- name: provision dev VMs
+  hosts: all
+  become: yes
+  vars_files:
+  - vars/Debian-vars.yml
+  - vars/vars.yml
+  tasks:
+  - name: apt cache update
+    apt:
+      update_cache: yes
+
+  - name: install Utilities
+    apt:
+      name:
+      - git
+      - nano
+      - wget
+  - name: install Java
+    apt:
+      name: 
+      - "{{java_package}}"
+  - name: install Maven
+    include_tasks: tasks/maven.yml
