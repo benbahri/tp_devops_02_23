@@ -1,0 +1,23 @@
+---
+- name: provision ci server
+  hosts: all
+  become: yes
+  vars_files:
+  - vars/vars.yml
+  - vars/RedHat-vars.yml
+  tasks:
+  - name: install Utilities
+    yum:
+      name:
+      - unzip
+  - name: install Java
+    yum:
+      name: 
+      - "{{java_package}}"
+  - name: Install Jenkins
+    include_tasks: tasks/jenkins.yml
+    tags: ['jenkins']
+
+  - name: Install SonarQube
+    include_tasks: tasks/sonar.yml
+    tags: ['sonar']

@@ -1,0 +1,35 @@
+---
+- name: Create Jenkins Repo
+  yum_repository:
+    name: jenkins
+    description: Jenkins RedHat repo
+    baseurl: http://pkg.jenkins.io/redhat
+    gpgkey: https://pkg.jenkins.io/redhat/jenkins.io.key
+    gpgcheck: yes
+    enabled: yes
+    state: present
+
+- name: install jenkins repo gpgkey
+  rpm_key:
+    key: https://pkg.jenkins.io/redhat/jenkins.io.key
+    validate_certs: false
+
+- name: Install Jenkins
+  yum:
+    update_cache: yes
+    name: jenkins
+
+- name: start and enable Jenkins
+  systemd:
+    name: jenkins
+    state: started
+    enabled: yes
+
+- name: Get Jenkins admin key
+  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+  ignore_errors: true
+  register: jenkins_password
+
+- debug:
+    msg: "{{jenkins_password.stdout}}"
+

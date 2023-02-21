@@ -20,5 +20,8 @@ Vagrant.configure("2") do |config|
         subconfig.vm.provider "virtualbox" do |vb|
             vb.memory = "6192"
         end
+        subconfig.vm.provision "ansible" do |ansible|
+            ansible.playbook = "ansible/ci-server.yml"
+        end
     end
 end
