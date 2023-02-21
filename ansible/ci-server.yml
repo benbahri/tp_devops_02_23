@@ -26,3 +26,7 @@
   - name: Install Artifactory
     include_tasks: tasks/artifactory.yml
     tags: ['artifactory']
+
+  - name: Install Docker
+    include_tasks: tasks/docker.yml
+    tags: ['artifactory']

@@ -23,5 +23,6 @@ Vagrant.configure("2") do |config|
         subconfig.vm.provision "ansible" do |ansible|
             ansible.playbook = "ansible/ci-server.yml"
         end
+        # subconfig.vm.provision "docker"
     end
 end
