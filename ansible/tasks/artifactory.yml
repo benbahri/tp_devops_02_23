@@ -1,0 +1,10 @@
+---
+- name: install artifactory from rpm
+  yum:
+    name: https://releases.jfrog.io/artifactory/artifactory-rpms/jfrog-artifactory-oss/jfrog-artifactory-oss-[RELEASE].rpm
+    validate_certs: false
+- name: start and enable service
+  systemd:
+    name: artifactory
+    state: started
+    enabled: true

@@ -10,6 +10,7 @@
     yum:
       name:
       - unzip
+      - wget
   - name: install Java
     yum:
       name: 
@@ -21,3 +22,7 @@
   - name: Install SonarQube
     include_tasks: tasks/sonar.yml
     tags: ['sonar']
+
+  - name: Install Artifactory
+    include_tasks: tasks/artifactory.yml
+    tags: ['artifactory']
