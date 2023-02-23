@@ -11,10 +11,14 @@
       name:
       - unzip
       - wget
+      - git
   - name: install Java
     yum:
       name: 
       - "{{java_package}}"
+  - name: Install Maven
+    include_tasks: tasks/maven.yml
+    tags: ['maven'] 
   - name: Install Jenkins
     include_tasks: tasks/jenkins.yml
     tags: ['jenkins']
@@ -29,4 +33,4 @@
 
   - name: Install Docker
     include_tasks: tasks/docker.yml
-    tags: ['artifactory']
+    tags: ['docker']

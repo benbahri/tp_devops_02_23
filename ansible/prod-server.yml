@@ -1,0 +1,67 @@
+- name: provision prod server 
+  hosts: all
+  become: yes
+  vars_files:
+  - vars/vars.yml
+  - vars/RedHat-vars.yml
+  tasks:
+  - name: install Utilities
+    yum:
+      name:
+      - unzip
+      - wget
+  - name: install Java
+    yum:
+      name: 
+      - "{{java_package}}"
+  - name: check tomcat is installed
+    stat:
+      path: "{{tomcat_home}}"
+    register: tomcat
+
+  - name: install tomcat block
+    when: not tomcat.stat.exists
+    block:  
+    - name: download and uncompress tomcat
+      unarchive:
+        src: https://dlcdn.apache.org/tomcat/tomcat-8/v{{tomcat_version}}/bin/apache-tomcat-{{tomcat_version}}.tar.gz
+        dest: /opt/
+        remote_src: yes
+        validate_certs: false
+    - name: rename sonartomcatqube folder
+      command: 
+        cmd: "mv apache-tomcat-{{tomcat_version}} tomcat"
+        chdir: "/opt/"
+    - name: configure applications context
+      copy:
+        src: files/tomcat-context.xml
+        dest: "{{item}}"
+      loop:
+      - "{{tomcat_home}}/webapps/manager/META-INF/context.xml"
+      - "{{tomcat_home}}/webapps/host-manager/META-INF/context.xml"
+    - name: configure tomcat users
+      copy:
+        src: files/tomcat-users.xml
+        dest: "{{tomcat_home}}/conf/tomcat-users.xml"
+    - name: create tomcat service
+      copy:
+        src: files/tomcat.service
+        dest: /etc/systemd/system/tomcat.service
+    - name: create tomcat user
+      user:
+        name: tomcat
+        shell: /bin/false
+        home: "{{tomcat_home}}/"
+    - name: change ownership of the tomcat home
+      file:
+        path: "{{tomcat_home}}"
+        owner: tomcat
+        group: tomcat
+        recurse: yes
+        state: directory
+    - name: start and enable tomcat
+      systemd:
+        daemon_reload: yes
+        name: tomcat
+        state: started
+        enabled: true

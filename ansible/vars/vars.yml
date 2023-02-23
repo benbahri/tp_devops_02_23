@@ -2,3 +2,5 @@
 maven_major_version: 3
 maven_version: 3.8.7
 sonarqube_version: 8.9.10.61524
+tomcat_version: 8.5.85
+tomcat_home: /opt/tomcat
