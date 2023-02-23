@@ -19,3 +19,11 @@
     name: docker
     state: started
     enabled: yes
+
+- name: edit docker service to use unix socket
+  lineinfile:
+    path: /usr/lib/systemd/system/docker.service
+    regexp: '^ExecStart='
+    line: ExecStart=/usr/bin/dockerd -H fd:// -H unix:///var/run/docker.sock --containerd=/run/containerd/containerd.sock
+  notify:
+  - restart docker service

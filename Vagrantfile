@@ -33,4 +33,13 @@ Vagrant.configure("2") do |config|
             ansible.playbook = "ansible/prod-server.yml"
         end
     end
+
+    config.vm.define "staging-server" do |subconfig|
+        subconfig.vm.box = "centos/7"
+        subconfig.vm.hostname = "staging"
+        subconfig.vm.network "private_network", ip: "192.168.60.200"
+        subconfig.vm.provision "ansible" do |ansible|
+            ansible.playbook = "ansible/staging-server.yml"
+        end
+    end
 end

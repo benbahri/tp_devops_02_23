@@ -34,3 +34,16 @@
   - name: Install Docker
     include_tasks: tasks/docker.yml
     tags: ['docker']
+
+  - name: add jenkins user to docker group
+    user:
+      name: jenkins
+      groups: docker
+      append: yes
+      
+  handlers:
+  - name: restart docker service
+    systemd:
+      name: docker
+      state: restarted
+      daemon-reload: yes 

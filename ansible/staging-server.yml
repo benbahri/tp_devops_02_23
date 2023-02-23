@@ -1,0 +1,13 @@
+---
+- name: provision staging server
+  hosts: all
+  become: yes
+  tasks:
+  - name: include docker tasks
+    include_tasks: tasks/docker.yml
+  handlers:
+  - name: restart docker service
+    systemd:
+      name: docker
+      state: restarted
+      daemon-reload: yes 
