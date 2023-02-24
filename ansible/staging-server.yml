@@ -5,6 +5,11 @@
   tasks:
   - name: include docker tasks
     include_tasks: tasks/docker.yml
+  - name: allow vagrant user to use docker
+    user:
+      name: vagrant
+      groups: docker
+      append: yes
   handlers:
   - name: restart docker service
     systemd:

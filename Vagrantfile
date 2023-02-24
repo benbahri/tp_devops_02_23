@@ -23,6 +23,7 @@ Vagrant.configure("2") do |config|
         subconfig.vm.provision "ansible" do |ansible|
             ansible.playbook = "ansible/ci-server.yml"
         end
+        subconfig.vm.provision "file", source: "./id_rsa", destination: "/home/vagrant/.ssh/"
     end
 
     config.vm.define "prod-server" do |subconfig|
@@ -41,5 +42,10 @@ Vagrant.configure("2") do |config|
         subconfig.vm.provision "ansible" do |ansible|
             ansible.playbook = "ansible/staging-server.yml"
         end
+        subconfig.vm.provision "shell", inline: $script_inject_pk
     end
 end
+
+$script_inject_pk =<<-'EOF'
+cat /vagrant/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+EOF
